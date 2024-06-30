@@ -1,0 +1,8 @@
+.list_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 각 PostItem 간의 간격 설정 */
+    width: 100%;
+    max-width: 800px; /* 원하는 최대 너비 설정 */
+}
+

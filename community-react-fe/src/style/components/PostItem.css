@@ -1,0 +1,43 @@
+.PostItem {
+    border: 1px solid black;
+    cursor: pointer;
+    border-radius: 16px;
+    border: none;
+    background-color: white;
+    padding: 20px 20px;
+    transition: box-shadow 0.3s; /* 배경색과 박스 그림자 전환에 0.3초 설정 */
+}
+
+.PostItem:hover{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.postTitle{
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+.meta_and_date{
+    display: flex;
+    justify-content: space-between;
+}
+
+.meta>span{
+    margin: 0 5px;
+}
+
+.user{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.userImage img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid gray;
+}
+

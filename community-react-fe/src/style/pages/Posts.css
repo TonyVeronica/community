@@ -1,0 +1,13 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 550px;
+    height: 100%;
+}
+
+
+.intro{
+    text-align: center;
+    font-size: 20px;
+    padding-top: 50px;
+}

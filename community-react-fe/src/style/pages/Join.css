@@ -1,0 +1,43 @@
+.prf-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 149px;
+  height: 149px;
+  border-radius: 50%;
+  display: none;
+}
+
+.prf-img {
+  position: relative;
+}
+
+.prf-img label {
+  display: inline-block;
+  width: 149px;
+  height: 149px;
+  border-radius: 50%;
+  background-color: #c4c4c4; /* 테두리 스타일과 색상 설정 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  overflow: hidden;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.prf-img label::before {
+  content: '+'; 
+  font-size: 50px; 
+  font-weight: 50;
+  display: block;
+  line-height: 149px; 
+  text-align: center; 
+}
+
+.prf-img label.has-image::before {
+    content: '';
+}  

@@ -1,0 +1,33 @@
+.InputBox{
+    margin: 8px 0;
+}
+
+.InputBoxTitle, .PostInputBoxTitle{
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.InputBoxContent{
+    width: 355px;
+    height: 33px;
+    border-radius: 4px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+
+.HelperMsg{
+    font-size: 12px;
+    margin-top: 5px;
+    max-width: 355px;
+    overflow-wrap: break-word;
+}
+
+.HelperMsg.error{
+    color: #ff0000;
+}
+
+.HelperMsg.success {
+    color: #207a38
+}
