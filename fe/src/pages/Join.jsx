@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword, validateConfirmPassword, validateNickname } from "../util/validator";
 import useValidation from "../hooks/useValidation";
 import { useState } from "react";
+import axios from "axios"
 
 function Join() {
     const nav = useNavigate();
@@ -47,8 +48,23 @@ function Join() {
         e.preventDefault();
 
         if (isEmailValid && isPasswordValid && isConfirmPasswordValid && isNicknameValid) {
-            console.log("회원가입 완료");
             // 회원가입 로직
+            axios.post('url', {
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword,
+                nickname: nickname,
+                profileImage: imageUrl
+            }).then(response => {
+                if (response.data.success) {
+                    console.log("회원가입 완료")
+                    nav('/')
+                } else {
+                    console.log("회원가입 실패", response.data.message)
+                }
+            }).catch(error => {
+                console.log("회원가입 요청 오류", error)
+            })
         } else {
             console.log("유효하지 않은 입력값이 있습니다.");
         }
