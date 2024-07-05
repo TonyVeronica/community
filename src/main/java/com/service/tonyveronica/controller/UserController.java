@@ -71,7 +71,7 @@ public class UserController {
         System.out.println(member);
 
         if(member != null){ //중복
-            return new ResponseEntity(member, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(member, HttpStatus.CONFLICT);
         }
         else return new ResponseEntity(member, HttpStatus.OK);
     }
@@ -86,7 +86,7 @@ public class UserController {
         System.out.println(member);
 
         if (member != null) { //중복
-            return new ResponseEntity(member, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(member, HttpStatus.CONFLICT);
         } else return new ResponseEntity(member, HttpStatus.OK);
     }
 
