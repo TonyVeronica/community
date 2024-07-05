@@ -30,6 +30,9 @@ public class Member {
     @Column(name="is_deleted", nullable = false)
     private boolean isDelete; //삭제 여부
 
+    @Column(name="role")
+    private String role;
+
 
     public Member(String email, String password, String nickName, String imagePath, boolean isDelete) {
         this.email = email;
