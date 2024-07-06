@@ -1,6 +1,7 @@
 package com.service.tonyveronica.controller;
 
 import com.service.tonyveronica.domain.Member;
+import com.service.tonyveronica.dto.JoinDTO;
 import com.service.tonyveronica.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity registUser(@RequestBody HashMap<String, Object>requestJsonHashMap){ //회원가입
-        Member member = null;
+        JoinDTO joinDTO = null;
         String profileImageBase64 = (String) requestJsonHashMap.get("profileImage");
         if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
             // Base64 헤더 제거
@@ -47,10 +48,10 @@ public class UserController {
                 String email = (String)requestJsonHashMap.get("email");
                 String password = (String)requestJsonHashMap.get("password");
                 String nickname = (String)requestJsonHashMap.get("nickname");
-                member = new Member(email, password, nickname, file.getAbsolutePath(), false);
-                System.out.println(member);
+                joinDTO = new JoinDTO(email, password, nickname, file.getAbsolutePath());
+                System.out.println(joinDTO);
 
-                Long memberId = memberService.join(member);
+                Long memberId = memberService.join(joinDTO);
                 System.out.println("memberId = " + memberId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -58,7 +59,7 @@ public class UserController {
             }
         }
         System.out.println("성공");
-        return new ResponseEntity(member, HttpStatus.OK);
+        return new ResponseEntity(joinDTO, HttpStatus.OK);
     }
 
     @PostMapping("users/email") //이메일 중복 확인
