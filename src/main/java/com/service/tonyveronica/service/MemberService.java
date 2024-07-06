@@ -1,13 +1,14 @@
 package com.service.tonyveronica.service;
 
 import com.service.tonyveronica.domain.Member;
+import com.service.tonyveronica.dto.JoinDTO;
 
 import java.util.List;
 
 public interface MemberService {
 
 
-    Long join(Member member);
+    Long join(JoinDTO joinDTO);
 
     List<Member> findMembers();
 
