@@ -3,6 +3,7 @@ package com.service.tonyveronica.service;
 import com.service.tonyveronica.domain.Member;
 import com.service.tonyveronica.dto.JoinDTO;
 import com.service.tonyveronica.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -52,6 +53,19 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member isDuplicateNickname(String nickName) {
         return memberRepository.existsByNickname(nickName);
+    }
+
+    @Override
+    @Transactional
+    public int updateNickname(String nickname, String email) {
+        return memberRepository.updateMemberByNickName(nickname, email);
+    }
+
+    @Override
+    @Transactional
+    public int updatePassword(String password, String email) {
+        String newPassword = bCryptPasswordEncoder.encode(password);
+        return memberRepository.updateMemberByPassword(newPassword, email);
     }
 
 

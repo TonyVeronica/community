@@ -16,4 +16,8 @@ public interface MemberService {
 
     Member isDuplicateNickname(String nickName);
 
+    int updateNickname(String nickname, String email);
+
+    int updatePassword(String password, String email);
+
 }
