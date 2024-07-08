@@ -142,10 +142,10 @@ public class UserController {
         String email = customMemberDetails.getUsername();
 
         String profileImageBase64 = (String) requestJsonHashMap.get("profileImage");
-
+        System.out.println(profileImageBase64);
         //이미지가 null일 경우 다시 처리해야 함
 
-        if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+        if ((profileImageBase64 != null && !profileImageBase64.isEmpty()) && profileImageBase64.charAt(0) == 'd') {
             // Base64 헤더 제거
             String base64Image = profileImageBase64.split(",")[1];
             try {
@@ -161,19 +161,20 @@ public class UserController {
 
                 System.out.println("이미지 저장 성공: " + file.getAbsolutePath());
 
-                System.out.println("email = " + email);
-
-                String nickname = (String)requestJsonHashMap.get("nickname");
-                System.out.println("nickname = " + nickname);
-
-                int isSuccess = memberService.updateNickname(nickname, email);
-                System.out.println(isSuccess);
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
+
+        System.out.println("email = " + email);
+
+        String nickname = (String)requestJsonHashMap.get("nickname");
+        System.out.println("nickname = " + nickname);
+
+        int isSuccess = memberService.updateNickname(nickname, email);
+        System.out.println(isSuccess);
+
         System.out.println("성공");
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -185,6 +186,7 @@ public class UserController {
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
         String email = customMemberDetails.getUsername();
         String password = (String)requestJsonHashMap.get("password");
+        System.out.println("새로운 비밀 번호 = " + password);
 
         int isSuccess = memberService.updatePassword(password, email);
         System.out.println("isSuccess = " + isSuccess);
