@@ -1,5 +1,6 @@
 package com.service.tonyveronica.config;
 
+import com.service.tonyveronica.jwt.JWTFilter;
 import com.service.tonyveronica.jwt.JWTUtil;
 import com.service.tonyveronica.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +61,11 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/", "/join", "/users", "/users/email", "/users/nickname").permitAll() //해당 경로는 무조건 승인
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN이라는 권한을 가진 사용자만 접근 가능
                         .anyRequest().authenticated()); // 나머지 경로는 로그인 한 사용자만 접근할 수 있음
+
+        //JWTFilter 등록
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
 
         //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http
