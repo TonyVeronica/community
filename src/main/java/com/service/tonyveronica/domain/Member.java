@@ -45,10 +45,13 @@ public class Member {
     @Override
     public String toString() {
         return "Member{" +
-                "email='" + email + '\'' +
+                "member_id=" + member_id +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
+                ", imagePath='" + imagePath + '\'' +
                 ", isDelete=" + isDelete +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
