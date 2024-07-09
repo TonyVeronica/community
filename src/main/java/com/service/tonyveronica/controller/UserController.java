@@ -193,4 +193,19 @@ public class UserController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @DeleteMapping("users/user/delete")
+    public ResponseEntity withdrawMember(Authentication authentication){
+        System.out.println("회원 정보 탈퇴");
+
+        CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
+        String email = customMemberDetails.getUsername();
+
+        int isSuccess = memberService.deleteMember(email);
+        System.out.println("isSuccess = " + isSuccess);
+
+        //회원 탈퇴하고 access token 삭제 해야함
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
