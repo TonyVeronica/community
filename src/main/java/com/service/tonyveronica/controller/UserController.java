@@ -50,7 +50,7 @@ public class UserController {
 
                 // 파일 저장
                 String userEmail = (String)requestJsonHashMap.get("email");
-                File file = new File("image/"+userEmail+".png");
+                File file = new File("image/profile/"+userEmail+".png");
                 try (OutputStream os = new FileOutputStream(file)) {
                     os.write(imageBytes);
                 }
