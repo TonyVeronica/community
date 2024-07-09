@@ -28,6 +28,6 @@ public class Post {
     @Column(name="views")
     private Long views;
 
-    @Column(name="member_id")
-    private Long member_id;
+    @Column(name="member_email")
+    private String memberEmail;
 }
