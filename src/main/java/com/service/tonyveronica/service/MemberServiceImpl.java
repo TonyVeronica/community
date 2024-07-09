@@ -3,13 +3,13 @@ package com.service.tonyveronica.service;
 import com.service.tonyveronica.domain.Member;
 import com.service.tonyveronica.dto.JoinDTO;
 import com.service.tonyveronica.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -66,6 +66,12 @@ public class MemberServiceImpl implements MemberService{
     public int updatePassword(String password, String email) {
         String newPassword = bCryptPasswordEncoder.encode(password);
         return memberRepository.updateMemberByPassword(newPassword, email);
+    }
+
+    @Override
+    @Transactional
+    public int deleteMember(String email) {
+        return memberRepository.deleteByEmail(email);
     }
 
 

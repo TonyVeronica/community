@@ -20,4 +20,5 @@ public interface MemberService {
 
     int updatePassword(String password, String email);
 
+    int deleteMember(String email);
 }
