@@ -22,9 +22,10 @@ public class PostServiceImpl implements PostService{
         post.setTitle(title);
         post.setContent(content);
         post.setPostImagePath(postImagePath);
-        post.setDeleted(false);
+        post.setIsDeleted(false);
         post.setMemberEmail(email);
         post.setViews(0L);
+        post.setLikes(0L);
 
         return postRepository.save(post).getPostId();
     }

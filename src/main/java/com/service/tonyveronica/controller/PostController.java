@@ -77,6 +77,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity viewAllPosts(){
+        System.out.println("전체 게시물 조회!!!!!!!");
         List<Post> list = postService.getAllPosts();
         System.out.println(list);
         return new ResponseEntity<>(list, HttpStatus.OK);
