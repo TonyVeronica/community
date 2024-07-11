@@ -170,11 +170,12 @@ public class PostController {
 
         if(post.getPostImagePath() != null){
             File postImage = new File(post.getPostImagePath());
-            path = Paths.get(profile.getAbsolutePath());
+            path = Paths.get(postImage.getAbsolutePath());
             imageBytes = Files.readAllBytes(path);
             responseMap.put("postImage",Base64.getEncoder().encodeToString(imageBytes));
-
         }
+
+        responseMap.put("postId", postId);
 
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
