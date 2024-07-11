@@ -36,12 +36,12 @@ public class Comment {
     @Column(name="member_email")
     private Long memberEmail;
 
-    @ManyToOne(optional = false)
-    @JoinTable(name = "posts",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id")
-    )
-    private Post post;
+//    @ManyToOne(optional = false)
+//    @JoinTable(name = "posts",
+//            joinColumns = @JoinColumn(name = "comment_id"),
+//            inverseJoinColumns = @JoinColumn(name = "post_id")
+//    )
+//    private Post post;
 
     @PrePersist
     protected void onCreate() {

@@ -46,8 +46,8 @@ public class Post {
     @Column(name="member_email")
     private String memberEmail;
 
-    @OneToMany
-    private List<Comment> comments= new ArrayList<>();
+//    @OneToMany
+//    private List<Comment> comments= new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
