@@ -24,10 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -121,7 +118,7 @@ public class PostController {
 
                     returnJsonMap[i].put("fileName", file.getName());
                     returnJsonMap[i].put("contentType", "image/png");
-                    returnJsonMap[i].put("imageData", Base64.getEncoder().encodeToString(imageBytes));
+                    returnJsonMap[i].put("userImage", Base64.getEncoder().encodeToString(imageBytes));
 
                     headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -137,9 +134,48 @@ public class PostController {
         return new ResponseEntity<>(returnJsonMap,headers,  HttpStatus.OK);
     }
 
-//    @GetMapping("/posts/{postId}")
-//    public ResponseEntity viewOnePost(@PathVariable String postId){
-//        System.out.println("상세 페이지 조회!!!!");
-//        Post post =
-//    }
+    @GetMapping("/posts/detail/{postId}")
+    public ResponseEntity viewOnePost(@PathVariable String postId) throws IOException {
+        System.out.println("상세 페이지 조회!!!!");
+        Long id = Long.parseLong(postId);
+        Map<String, Object>responseMap = new HashMap<>();
+        Post post = postService.getOnePost(id);
+        Member member = memberService.isDuplicateEmail(post.getMemberEmail());
+
+        String title = post.getTitle();
+        responseMap.put("title", title);
+
+        String nickName = member.getNickName();
+        responseMap.put("nickname", nickName);
+
+        LocalDateTime createdAt = post.getCreatedAt();
+        responseMap.put("createdAt", createdAt);
+
+        String content = post.getContent();
+        responseMap.put("content", content);
+
+        Long view = post.getViews();
+        responseMap.put("view", view);
+
+        Long like = post.getLikes();
+        responseMap.put("likes", like);
+
+        Long comments = postService.countComments(id);
+        responseMap.put("comments", id);
+
+        File profile = new File(member.getImagePath());
+        Path path = Paths.get(profile.getAbsolutePath());
+        byte[] imageBytes = Files.readAllBytes(path);
+        responseMap.put("userImage", Base64.getEncoder().encodeToString(imageBytes));
+
+        if(post.getPostImagePath() != null){
+            File postImage = new File(post.getPostImagePath());
+            path = Paths.get(profile.getAbsolutePath());
+            imageBytes = Files.readAllBytes(path);
+            responseMap.put("postImage",Base64.getEncoder().encodeToString(imageBytes));
+
+        }
+
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
 }
