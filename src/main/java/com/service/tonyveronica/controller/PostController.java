@@ -134,7 +134,7 @@ public class PostController {
         return new ResponseEntity<>(returnJsonMap,headers,  HttpStatus.OK);
     }
 
-    @GetMapping("/posts/detail/{postId}")
+    @GetMapping("/posts/{postId}")
     public ResponseEntity viewOnePost(@PathVariable String postId) throws IOException {
         System.out.println("상세 페이지 조회!!!!");
         Long id = Long.parseLong(postId);
