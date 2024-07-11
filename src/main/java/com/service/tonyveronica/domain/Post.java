@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="posts")
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Column(name="title", nullable = false)
@@ -42,6 +45,9 @@ public class Post {
 
     @Column(name="member_email")
     private String memberEmail;
+
+    @OneToMany
+    private List<Comment> comments= new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
