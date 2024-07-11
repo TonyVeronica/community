@@ -37,9 +37,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Optional<Post> getOnePost(String postId) {
-        Long id = Long.parseLong(postId);
-        return postRepository.findById(id);
+    public Post getOnePost(Long postId) {
+        return postRepository.findByPostId(postId);
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface PostService {
 
     List<Post> getAllPosts();
 
-    Optional<Post> getOnePost(String postId);
+    Post getOnePost(Long postId);
 
     Long countComments(Long postId);
 }
