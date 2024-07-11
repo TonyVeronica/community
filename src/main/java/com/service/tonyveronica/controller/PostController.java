@@ -161,7 +161,7 @@ public class PostController {
         responseMap.put("likes", like);
 
         Long comments = postService.countComments(id);
-        responseMap.put("comments", id);
+        responseMap.put("comment_count", comments);
 
         File profile = new File(member.getImagePath());
         Path path = Paths.get(profile.getAbsolutePath());
