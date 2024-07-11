@@ -1,32 +1,41 @@
 package com.service.tonyveronica.controller;
 
 import com.fasterxml.jackson.core.JsonToken;
+import com.service.tonyveronica.domain.Member;
 import com.service.tonyveronica.domain.Post;
 import com.service.tonyveronica.dto.CustomMemberDetails;
 import com.service.tonyveronica.dto.JoinDTO;
 import com.service.tonyveronica.dto.PostCreateDTO;
+import com.service.tonyveronica.service.MemberService;
 import com.service.tonyveronica.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
 public class PostController {
     private Long imageNumber = 1L;
     private final PostService postService;
+    private final MemberService memberService;
+
 
     @PostMapping("/posts")
     public ResponseEntity resistPost(@RequestBody HashMap<String, Object> requestJsonMap, Authentication authentication){
@@ -75,11 +84,62 @@ public class PostController {
         return new ResponseEntity(postCreateDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/posts") //전체 게시물 조회 (잠시 보류)
     public ResponseEntity viewAllPosts(){
         System.out.println("전체 게시물 조회!!!!!!!");
         List<Post> list = postService.getAllPosts();
-        System.out.println(list);
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        Map<String, Object>[] returnJsonMap = new HashMap[list.size()];
+        for(int i=0;i<list.size();i++){
+            returnJsonMap[i] = new HashMap<>();
+            Long postId = list.get(i).getPostId();
+            String title = list.get(i).getTitle();
+            LocalDateTime createdAt = list.get(i).getCreatedAt();
+            LocalDateTime updatedAt = list.get(i).getUpdatedAt();
+            Long views = list.get(i).getViews();
+            Long likes = list.get(i).getLikes();
+            returnJsonMap[i].put("postId", postId);
+            returnJsonMap[i].put("title", title);
+            returnJsonMap[i].put("createdAt", createdAt);
+            returnJsonMap[i].put("updatedAt", updatedAt);
+            returnJsonMap[i].put("views", views);
+            returnJsonMap[i].put("likes", likes);
+
+            Long comments = postService.countComments(postId);
+            System.out.println("댓글 수 = " + comments);
+            returnJsonMap[i].put("comments", comments);
+
+            String email = list.get(i).getMemberEmail();
+            Member m = memberService.isDuplicateEmail(email);
+
+            File file = new File(m.getImagePath());
+            if(file.exists()){
+                try {
+                    Path path = Paths.get(file.getAbsolutePath());
+                    byte[] imageBytes = Files.readAllBytes(path);
+
+                    returnJsonMap[i].put("fileName", file.getName());
+                    returnJsonMap[i].put("contentType", "image/png");
+                    returnJsonMap[i].put("imageData", Base64.getEncoder().encodeToString(imageBytes));
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    returnJsonMap[i].put("message", "Error reading file");
+                }
+            }
+            returnJsonMap[i].put("nickname", m.getNickName());
+
+        }
+
+        return new ResponseEntity<>(returnJsonMap,headers,  HttpStatus.OK);
     }
+
+//    @GetMapping("/posts/{postId}")
+//    public ResponseEntity viewOnePost(@PathVariable String postId){
+//        System.out.println("상세 페이지 조회!!!!");
+//        Post post =
+//    }
 }
