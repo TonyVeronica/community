@@ -155,7 +155,7 @@ public class PostController {
         responseMap.put("content", content);
 
         Long view = post.getViews();
-        responseMap.put("view", view);
+        responseMap.put("views", view);
 
         Long like = post.getLikes();
         responseMap.put("likes", like);
