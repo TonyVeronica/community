@@ -175,7 +175,7 @@ public class PostController {
             responseMap.put("postImage",Base64.getEncoder().encodeToString(imageBytes));
         }
 
-        responseMap.put("postId", postId);
+        responseMap.put("postId", id);
 
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
