@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +34,16 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    @Override
+    public Optional<Post> getOnePost(String postId) {
+        Long id = Long.parseLong(postId);
+        return postRepository.findById(id);
+    }
+
+    @Override
+    public Long countComments(Long postId) {
+        return postRepository.countCommentsByPostId(postId);
     }
 }
