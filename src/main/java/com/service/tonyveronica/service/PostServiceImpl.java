@@ -4,6 +4,8 @@ import com.service.tonyveronica.domain.Post;
 import com.service.tonyveronica.dto.PostCreateDTO;
 import com.service.tonyveronica.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,5 +46,10 @@ public class PostServiceImpl implements PostService{
     @Override
     public Long countComments(Long postId) {
         return postRepository.countCommentsByPostId(postId);
+    }
+
+    @Override
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 }

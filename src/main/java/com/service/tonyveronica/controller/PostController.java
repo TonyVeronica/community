@@ -6,14 +6,20 @@ import com.service.tonyveronica.domain.Post;
 import com.service.tonyveronica.dto.CustomMemberDetails;
 import com.service.tonyveronica.dto.JoinDTO;
 import com.service.tonyveronica.dto.PostCreateDTO;
+import com.service.tonyveronica.dto.responseDTO;
 import com.service.tonyveronica.service.MemberService;
 import com.service.tonyveronica.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -81,57 +87,47 @@ public class PostController {
         return new ResponseEntity(postCreateDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/posts") //전체 게시물 조회 (잠시 보류)
-    public ResponseEntity viewAllPosts(){
-        System.out.println("전체 게시물 조회!!!!!!!");
-        List<Post> list = postService.getAllPosts();
-        HttpHeaders headers = new HttpHeaders();
+    @GetMapping("/posts/{currentPage}")
+    public ResponseEntity<Page<responseDTO>> viewAllPosts(@PathVariable int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage, 5);
+        Page<Post> postPage = postService.getAllPosts(pageable);
+        List<responseDTO> responseDTOList = new ArrayList<>();
 
-        Map<String, Object>[] returnJsonMap = new HashMap[list.size()];
-        for(int i=0;i<list.size();i++){
-            returnJsonMap[i] = new HashMap<>();
-            Long postId = list.get(i).getPostId();
-            String title = list.get(i).getTitle();
-            LocalDateTime createdAt = list.get(i).getCreatedAt();
-            LocalDateTime updatedAt = list.get(i).getUpdatedAt();
-            Long views = list.get(i).getViews();
-            Long likes = list.get(i).getLikes();
-            returnJsonMap[i].put("postId", postId);
-            returnJsonMap[i].put("title", title);
-            returnJsonMap[i].put("createdAt", createdAt);
-            returnJsonMap[i].put("updatedAt", updatedAt);
-            returnJsonMap[i].put("views", views);
-            returnJsonMap[i].put("likes", likes);
-
+        for (Post post : postPage) {
+            Long postId = post.getPostId();
+            String title = post.getTitle();
+            LocalDateTime createdAt = post.getCreatedAt();
+            LocalDateTime updatedAt = post.getUpdatedAt();
+            Long views = post.getViews();
+            Long likes = post.getLikes();
             Long comments = postService.countComments(postId);
-            System.out.println("댓글 수 = " + comments);
-            returnJsonMap[i].put("comments", comments);
+            String email = post.getMemberEmail();
+            Member member = memberService.isDuplicateEmail(email);
 
-            String email = list.get(i).getMemberEmail();
-            Member m = memberService.isDuplicateEmail(email);
-
-            File file = new File(m.getImagePath());
-            if(file.exists()){
-                try {
-                    Path path = Paths.get(file.getAbsolutePath());
-                    byte[] imageBytes = Files.readAllBytes(path);
-
-                    returnJsonMap[i].put("fileName", file.getName());
-                    returnJsonMap[i].put("contentType", "image/png");
-                    returnJsonMap[i].put("userImage", Base64.getEncoder().encodeToString(imageBytes));
-
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    returnJsonMap[i].put("message", "Error reading file");
+            String userImage = null;
+            if (member != null) {
+                File file = new File(member.getImagePath());
+                if (file.exists()) {
+                    try {
+                        Path path = Paths.get(file.getAbsolutePath());
+                        byte[] imageBytes = Files.readAllBytes(path);
+                        userImage = Base64.getEncoder().encodeToString(imageBytes);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            returnJsonMap[i].put("nickname", m.getNickName());
 
+            responseDTO responseDTO = new responseDTO(postId, title, createdAt, updatedAt, views, likes, comments, email, userImage, member != null ? member.getNickName() : null);
+            responseDTOList.add(responseDTO);
         }
 
-        return new ResponseEntity<>(returnJsonMap,headers,  HttpStatus.OK);
+        Page<responseDTO> responseDTOPage = new PageImpl<>(responseDTOList, pageable, postPage.getTotalElements());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        return new ResponseEntity<>(responseDTOPage, headers, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")

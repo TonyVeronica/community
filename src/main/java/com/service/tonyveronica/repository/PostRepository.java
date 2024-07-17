@@ -1,6 +1,8 @@
 package com.service.tonyveronica.repository;
 
 import com.service.tonyveronica.domain.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,4 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p where p.postId = :postId")
     Post findByPostId(@Param("postId") Long postId);
+
+    Page<Post> getAllPosts(Pageable pageable);
+
 }
