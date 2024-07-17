@@ -9,6 +9,7 @@ import com.service.tonyveronica.dto.PostCreateDTO;
 import com.service.tonyveronica.dto.responseDTO;
 import com.service.tonyveronica.service.MemberService;
 import com.service.tonyveronica.service.PostService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -87,8 +88,10 @@ public class PostController {
         return new ResponseEntity(postCreateDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/posts/{currentPage}")
-    public ResponseEntity<Page<responseDTO>> viewAllPosts(@PathVariable int currentPage) {
+    @GetMapping("/posts")
+    public ResponseEntity<Page<responseDTO>> viewAllPosts(@RequestParam("currentPage") int currentPage) {
+        System.out.println("전체 포스트 조회");
+        System.out.println("current Page = " + currentPage);
         Pageable pageable = PageRequest.of(currentPage, 5);
         Page<Post> postPage = postService.getAllPosts(pageable);
         List<responseDTO> responseDTOList = new ArrayList<>();
@@ -117,7 +120,6 @@ public class PostController {
                     }
                 }
             }
-
             responseDTO responseDTO = new responseDTO(postId, title, createdAt, updatedAt, views, likes, comments, email, userImage, member != null ? member.getNickName() : null);
             responseDTOList.add(responseDTO);
         }
